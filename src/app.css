@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-main: var(--main-1);
+  --color-main-1: var(--main-1);
+  --color-main-2: var(--main-2);
+  --color-main-3: var(--main-3);
+  --color-main-4: var(--main-4);
+
+  --color-fore: var(--fore-1);
+  --color-fore-1: var(--fore-1);
+  --color-fore-2: var(--fore-2);
+  --color-fore-3: var(--fore-3);
+
+  --color-accent: var(--accent-1);
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+}
+
+@layer base {
+  *,
+  *::after,
+  *::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Manrope', Courier, monospace;
+    color: var(--color-light);
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--color-main-1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  :root {
+    --main-1: oklch(95% 0 none);
+    --main-2: oklch(87% 0 none);
+    --main-3: oklch(79% 0 none);
+    --main-4: oklch(71% 0 none);
+
+    --fore-1: oklch(16% 0 none);
+    --fore-2: oklch(25% 0 none);
+    --fore-3: oklch(50% 0 none);
+    
+    --accent-1: oklch(47% 0.19011 277.66);
+    --accent-2: oklch(57% 0.16086 279.83);
+    --accent-3: oklch(67% 0.09933 282.58);
+
+    --success: oklch(60% 0.13874 160.89);
+    --error: oklch(55% 0.20365 27.315);
+    --warning: oklch(60% 0.18366 33.311);
+  }
+  .dark {
+    --main-1: oklch(16% 0 none);
+    --main-2: oklch(22% 0 none);
+    --main-3: oklch(28% 0 none);
+    --main-4: oklch(34% 0 none);
+
+    --fore-1: oklch(95% 0 none);
+    --fore-2: oklch(77% 0 none);
+    --fore-3: oklch(63% 0 none);
+    
+    --accent-1: oklch(70% 0.13352 280.45);
+    --accent-2: oklch(60% 0.13352 280.45);
+    --accent-3: oklch(50% 0.15131 279.08);
+
+    --success: oklch(80% 0.13874 160.89);
+    --error: oklch(64% 0.20365 27.315);
+    --warning: oklch(64% 0.18366 33.311);
+  }
+}
