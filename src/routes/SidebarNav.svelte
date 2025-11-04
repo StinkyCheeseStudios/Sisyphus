@@ -1,10 +1,22 @@
 <script>
 	import Logo from '$lib/components/Logo.svelte';
-  import NavDropdownButton from './NavDropdownButton.svelte';
+  import NavDropdownButton from './NavDropdown.svelte';
   import NavItem from './NavItem.svelte';
   import { House, ShieldUser, Pickaxe, BanknoteArrowDown, BanknoteX } from 'lucide-svelte';
 
 	let { isMenuOpen } = $props();
+  let activeDropdown = $state('none');
+  $inspect(activeDropdown);
+
+  function toggleActiveDropdown(clickedDropdown) {
+    if (activeDropdown === clickedDropdown) {
+      activeDropdown = 'none';
+    }
+    else {
+      activeDropdown = clickedDropdown;
+      isMenuOpen = true;
+    }
+  }
 
   /* TO BE CHANGED */
   /* These are obviously mostly joke routes and nav buttons for visual testing purposes only */
@@ -15,7 +27,7 @@
 			icon: ShieldUser,
 			text: 'Administration',
 			dropdownItems: [
-				{ icon: Pickaxe, text: 'Send Employees to Mine', href: '/work/mining' },
+				{ icon: Pickaxe, text: 'Send Workers to Mine', href: '/work/mining' },
 				{ icon: BanknoteArrowDown, text: 'Drop Employee Wage', href: '/wages/reduce' },
         { icon: BanknoteX, text: 'Stop Paying Employees', href: '/wages/remove' }
 			]
@@ -43,14 +55,13 @@
 		></div>
 	</div>
 
-  <!--CURRENTLY THE COMPONENTS ARE NOT YET COMPLETE. TBD.-->
   <!--Rendering all the NavigationItems-->
-  <ul class="overflow-hidden">
+  <ul class="overflow-hidden p-1 flex flex-col gap-1">
     {#each NavigationItems as item}
       {#if !item.isDropdown}
         <NavItem {item} />
       {:else}
-        <NavDropdownButton {item} />
+        <NavDropdownButton {item} {activeDropdown} {toggleActiveDropdown} {isMenuOpen} />
       {/if}
     {/each}
   </ul>

@@ -4,10 +4,10 @@
   let { item } = $props();
 </script>
 
-<li class="w-full h-14 p-1">
+<li>
   <a 
     href={item.href}
-    class="w-full h-full hover:bg-main-3 border border-main-3 rounded-md flex items-center"
+    class="w-full h-12 hover:bg-main-3 border border-main-3 rounded-md flex items-center text-nowrap"
   >
     <div class="h-full aspect-square flex justify-center items-center">
       <item.icon size={20} />
@@ -15,8 +15,5 @@
     <span class="flex justify-center items-center ml-4">
       {item.text}
     </span>
-    <div class="ml-auto h-full aspect-square flex justify-center items-center">
-      <ChevronRight size={20} />
-    </div>
   </a>
 </li>
