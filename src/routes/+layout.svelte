@@ -3,10 +3,18 @@
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
   import { Sun, Moon } from 'lucide-svelte';
+  import Header from './Header.svelte';
+  import SidebarNav from './SidebarNav.svelte';
   
 	let { children } = $props();
 
   let isDark = $state(false);
+  let isMenuOpen = $state(false);
+  $inspect(isMenuOpen);
+
+  function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+  }
 
   function toggleDarkMode() {
     if (isDark) {
@@ -49,17 +57,17 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="min-h-dvh w-dvw flex flex-wrap gap-6 px-30 py-10 transition-colors">
-  <button 
-    class="bg-accent text-main p-1.5 w-min h-min rounded-md fixed top-1 left-1"
-    onclick={toggleDarkMode}
-  >
-    {#if isDark}
-      <Sun />
-    {:else}
-      <Moon />
-    {/if}
-  </button>
+<!--Main content container with flex-col to set sidebar and page content below header-->
+<div class="min-h-dvh w-vw flex flex-col">
+
+  <Header {toggleMenu} {isMenuOpen} />
   
-  {@render children?.()}
+  <!--Flex row container for sidebar navigation and pages (children)-->
+  <div class="flex">
+    <SidebarNav {isMenuOpen} />
+
+    <div class="grow">
+      {@render children?.()}
+    </div>
+  </div>
 </div>
