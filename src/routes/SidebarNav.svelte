@@ -2,9 +2,17 @@
 	import Logo from '$lib/components/Logo.svelte';
   import NavDropdownButton from './NavDropdown.svelte';
   import NavItem from './NavItem.svelte';
-  import { House, ShieldUser, Pickaxe, BanknoteArrowDown, BanknoteX } from 'lucide-svelte';
+  import { 
+    House, 
+    ShieldUser, 
+    Pickaxe, 
+    BanknoteArrowDown, 
+    BanknoteX, 
+    Sun, 
+    Moon
+  } from 'lucide-svelte';
 
-	let { isMenuOpen } = $props();
+	let { isMenuOpen, toggleDarkMode, isDark } = $props();
   let activeDropdown = $state('none');
   $inspect(activeDropdown);
 
@@ -56,7 +64,7 @@
 	</div>
 
   <!--Rendering all the NavigationItems-->
-  <ul class="overflow-hidden p-1 flex flex-col gap-1">
+  <ul class="overflow-hidden p-1 flex flex-col gap-1 h-full">
     {#each NavigationItems as item}
       {#if !item.isDropdown}
         <NavItem {item} />
@@ -64,5 +72,22 @@
         <NavDropdownButton {item} {activeDropdown} {toggleActiveDropdown} {isMenuOpen} />
       {/if}
     {/each}
+    <li class="mt-auto">
+      <button 
+        onclick={toggleDarkMode}
+        class="w-full h-12 hover:bg-main-3 border border-main-3 rounded-md flex items-center text-nowrap"
+      >
+        <div class="h-full aspect-square flex justify-center items-center">
+          {#if isDark}
+            <Sun size={20} />
+          {:else}
+            <Moon size={20} />
+          {/if}
+        </div>
+        <span class="flex justify-center items-center ml-4">
+          Toggle {isDark ? 'Light' : 'Dark'}
+        </span>
+      </button>
+    </li>
   </ul>
 </nav>
