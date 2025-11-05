@@ -64,7 +64,7 @@
   
   <!--Flex row container for sidebar navigation and pages (children)-->
   <div class="flex">
-    <SidebarNav {isMenuOpen} />
+    <SidebarNav {isMenuOpen} {toggleDarkMode} {isDark} />
 
     <div class="grow">
       {@render children?.()}
