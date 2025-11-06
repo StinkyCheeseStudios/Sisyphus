@@ -1,7 +1,8 @@
 <script>
 	import Logo from '$lib/components/Logo.svelte';
-  import NavDropdownButton from './NavDropdown.svelte';
+  import NavDropdown from './NavDropdown.svelte';
   import NavItem from './NavItem.svelte';
+  import DarkModeToggle from './DarkModeToggle.svelte';
   import { 
     House, 
     ShieldUser, 
@@ -12,17 +13,25 @@
     Moon
   } from 'lucide-svelte';
 
-	let { isMenuOpen, toggleDarkMode, isDark } = $props();
+	let { isMenuOpen, toggleDarkMode, isDark, toggleMenu } = $props();
   let activeDropdown = $state('none');
-  $inspect(activeDropdown);
+  $inspect(`ACTIVE DROPDOWN: ${activeDropdown}`);
 
   function toggleActiveDropdown(clickedDropdown) {
-    if (activeDropdown === clickedDropdown) {
+    // If the dropdown being clicked is already open AND menu is open, the user wants to close it, so do that.
+    // If the menu is not open the user does not see the dropdown as open, so likely they are trying to open it
+    //   even if it is already open.
+    if (activeDropdown === clickedDropdown && isMenuOpen) {
       activeDropdown = 'none';
     }
+    // Else they want to open it, so open it.
     else {
       activeDropdown = clickedDropdown;
-      isMenuOpen = true;
+    }
+
+    // Finally if the menu is closed and a dropdown is clicked, open the menu.
+    if (!isMenuOpen) {
+      toggleMenu();
     }
   }
 
@@ -64,30 +73,24 @@
 	</div>
 
   <!--Rendering all the NavigationItems-->
-  <ul class="overflow-hidden p-1 flex flex-col gap-1 h-full">
+  <ul class="relative overflow-hidden p-1 flex flex-col gap-1 h-full">
     {#each NavigationItems as item}
       {#if !item.isDropdown}
         <NavItem {item} />
       {:else}
-        <NavDropdownButton {item} {activeDropdown} {toggleActiveDropdown} {isMenuOpen} />
+        <NavDropdown {item} {activeDropdown} {toggleActiveDropdown} {isMenuOpen} />
       {/if}
     {/each}
-    <li class="mt-auto">
-      <button 
-        onclick={toggleDarkMode}
-        class="w-full h-12 hover:bg-main-3 border border-main-3 rounded-md flex items-center text-nowrap"
-      >
-        <div class="h-full aspect-square flex justify-center items-center">
-          {#if isDark}
-            <Sun size={20} />
-          {:else}
-            <Moon size={20} />
-          {/if}
-        </div>
-        <span class="flex justify-center items-center ml-4">
-          Toggle {isDark ? 'Light' : 'Dark'}
-        </span>
-      </button>
+
+    <!--Dark mode toggle button at the bottom of sidebar-->
+    <li 
+      class="mt-auto flex justify-center items-center gap-4 h-12 {isMenuOpen ? 'opacity-100' : 'opacity-0'}
+        transition-opacity duration-200"
+    >
+      <span class="relative bottom-px text-fore-3">
+        Appearance
+      </span>
+      <DarkModeToggle {isDark} {toggleDarkMode} />
     </li>
   </ul>
 </nav>
