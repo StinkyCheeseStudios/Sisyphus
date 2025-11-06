@@ -10,7 +10,7 @@
 
   let isDark = $state(false);
   let isMenuOpen = $state(false);
-  $inspect(isMenuOpen);
+  $inspect(`${isMenuOpen ? 'MENU IS OPEN' : 'MENU IS CLOSED'}`);
 
   function toggleMenu() {
     isMenuOpen = !isMenuOpen;
@@ -64,7 +64,7 @@
   
   <!--Flex row container for sidebar navigation and pages (children)-->
   <div class="flex">
-    <SidebarNav {isMenuOpen} {toggleDarkMode} {isDark} />
+    <SidebarNav {isMenuOpen} {toggleDarkMode} {isDark} {toggleMenu} />
 
     <div class="grow">
       {@render children?.()}

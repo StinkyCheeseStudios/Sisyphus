@@ -32,12 +32,14 @@
       transition:slide={{ duration: 300 }}
     >
       {#each item.dropdownItems as item}
-        <div class="flex gap-1 w-full">
-          <div class="w-1 h-full rounded-full {page.url.pathname === item.href ? 'bg-accent' : 'bg-main-3'}"></div>
+        <li class="flex gap-1 w-full">
+          <div 
+            class="w-1 h-full rounded-full shrink-0 {page.url.pathname === item.href ? 'bg-accent' : 'bg-main-3'}"
+          ></div>
           <div class="grow">
             <NavItem {item} />
           </div>
-        </div>
+        </li>
       {/each}
     </ul>
   {/if}
