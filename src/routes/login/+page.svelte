@@ -1,11 +1,15 @@
 <script>
 	let showPassword = false;
+
+  let { form } = $props();
 </script>
 
 <div class="mx-auto w-[90%] md:w-[350px]">
 	<form
-		class="mx-auto my-24 flex flex-col gap-4 rounded-xl border border-(--main-3) bg-(--main-1)/90 p-6 shadow-lg"
-		on:submit|preventDefault
+		class="mx-auto my-24 flex flex-col gap-4 rounded-xl border border-(--main-3) bg-(--main-1)/90 p-6 shadow-lg
+      relative"
+    method="POST"
+    action="?/login"
 	>
 		<h1 class="text-center text-lg font-semibold text-(--fore-1)">Sign in</h1>
 
@@ -113,5 +117,13 @@
 				</button>
 			</div>
 		</div>
+
+    <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 translate-y-full w-full text-center">
+      {#if form?.error}
+        <p class="text-error">{form.error}</p>
+      {:else if form?.success}
+        <p class="text-success">{form.success}</p>
+      {/if}
+    </div>
 	</form>
 </div>

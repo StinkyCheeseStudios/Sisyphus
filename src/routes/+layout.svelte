@@ -58,12 +58,12 @@
 </svelte:head>
 
 <!--Main content container with flex-col to set sidebar and page content below header-->
-<div class="min-h-dvh w-vw flex flex-col">
+<div class="min-h-dvh w-screen flex flex-col">
 
   <Header {toggleMenu} {isMenuOpen} />
   
   <!--Flex row container for sidebar navigation and pages (children)-->
-  <div class="flex">
+  <div class="flex grow">
     <SidebarNav {isMenuOpen} {toggleDarkMode} {isDark} {toggleMenu} />
 
     <div class="grow">

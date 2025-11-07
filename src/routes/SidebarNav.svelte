@@ -10,7 +10,9 @@
     BanknoteArrowDown, 
     BanknoteX, 
     Sun, 
-    Moon
+    Moon,
+    UserPlus,
+    LogIn
   } from 'lucide-svelte';
 
 	let { isMenuOpen, toggleDarkMode, isDark, toggleMenu } = $props();
@@ -39,6 +41,8 @@
   /* These are obviously mostly joke routes and nav buttons for visual testing purposes only */
   const NavigationItems = [
 		{ isDropdown: false, icon: House, text: 'Home', href: '/' },
+    { isDropdown: false, icon: UserPlus, text: 'Add User (temp)', href: '/temp/add-user' },
+    { isDropdown: false, icon: LogIn, text: 'Login', href: '/login' },
 		{
 			isDropdown: true,
 			icon: ShieldUser,
@@ -59,7 +63,8 @@
 >
   <!--Logo centered at the top. Also functions as a spacer under the header-->
 	<div 
-    class="h-14 w-full relative {isMenuOpen ? 'opacity-100' : 'opacity-0'} transition duration-300"
+    class="h-14 shrink-0 w-full relative transition duration-300
+      {isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
   >
 	  <Logo />
 	</div>
@@ -73,7 +78,7 @@
 	</div>
 
   <!--Rendering all the NavigationItems-->
-  <ul class="relative overflow-hidden p-1 flex flex-col gap-1 h-full">
+  <ul class="relative overflow-hidden p-1 pt-0 flex flex-col gap-1 h-full">
     {#each NavigationItems as item}
       {#if !item.isDropdown}
         <NavItem {item} />
