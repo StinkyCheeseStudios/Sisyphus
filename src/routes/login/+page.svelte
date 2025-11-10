@@ -1,5 +1,5 @@
 <script>
-	let showPassword = false;
+	let showPassword = $state(false);
 
   let { form } = $props();
 </script>
@@ -45,7 +45,7 @@
 					<button
 						type="button"
 						class="absolute inset-y-0 right-3 z-10 flex items-center justify-center p-0 text-(--fore-1) hover:opacity-80"
-						on:click={() => (showPassword = !showPassword)}
+						onclick={() => (showPassword = !showPassword)}
 						aria-label="Toggle password visibility"
 					>
 						{#if showPassword}
