@@ -7,7 +7,7 @@
 <li>
   <a 
     href={item.href}
-    class="w-full h-12 hover:bg-main-3 border border-main-3 rounded-md flex items-center text-nowrap"
+    class="w-full h-12 bg-main-3 hover:bg-main-4 rounded-md flex items-center text-nowrap"
   >
     <div class="h-full aspect-square flex justify-center items-center">
       <item.icon size={20} />

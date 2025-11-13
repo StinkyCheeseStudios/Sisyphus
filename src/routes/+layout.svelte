@@ -58,7 +58,7 @@
 </svelte:head>
 
 <!--Main content container with flex-col to set sidebar and page content below header-->
-<div class="min-h-dvh w-screen flex flex-col">
+<div class="min-h-dvh w-full flex flex-col">
 
   <Header {toggleMenu} {isMenuOpen} />
   
