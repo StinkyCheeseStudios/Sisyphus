@@ -10,7 +10,7 @@
 <li class="w-full flex flex-col gap-1">
   <button 
     onclick={() => { toggleActiveDropdown(item.text) }}
-    class="w-full h-12 hover:bg-main-3 border border-main-3 rounded-md flex items-center"
+    class="w-full h-12 bg-main-3 hover:bg-main-4 rounded-md flex items-center"
   >
     <div class="h-full aspect-square flex justify-center items-center">
       <item.icon size={20} />
