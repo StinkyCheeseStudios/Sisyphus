@@ -8,13 +8,16 @@ const SHIFT_TYPES = {
     EVENING: 'evening'
   };
 
+ // let schedule = [];
+ // let dayCountCount = 0;
+ // let dayAssigned = 0;
 
 
 //returns true, if the worker CAn be assigned to (this) shift, false if they are BLOCKED (breaks rule)
 export function canAssignShift(schedule, workerId, date, shiftType){
   //Rule 1! cant work twice on the same day
   const alreadyWorking = schedule.some(s =>
-    s.workerId === workerid && s.date === date //look thruy all existing shifts in the sched
+    s.workerId === workerId && s.date === date //look thruy all existing shifts in the sched
   );                                            //checks if this worker already as shift on this date, returns yes if so
   if (alreadyWorking) return false;
 
@@ -77,7 +80,7 @@ export function getShiftTypeCount(schedule, workerId, shiftType){
 
 //Calculates a "priority score" for a worker to determine who should be assigned to a shift
 //lower scores mean higher prio!
-export function calculatePriority(worker, date, shiftType, schdeule, params){
+export function calculatePriority(worker, date, shiftType, schedule, params){
   const scheduled = getScheduledHours(schedule, worker.id);
   const remaining = worker.hoursPerWeek - scheduled;
 
@@ -89,11 +92,11 @@ export function calculatePriority(worker, date, shiftType, schdeule, params){
   const dayCount = getShiftTypeCount(schedule, worker.id, SHIFT_TYPES.DAY);
   const eveCount = getShiftTypeCount(schedule, worker.id, SHIFT_TYPES.EVENING);
 
-  if(shiftType === SHIFT_TYPES.DAY && dayCountCount > eveCount){
+  if(shiftType === SHIFT_TYPES.DAY && dayCount > eveCount){
     score += 50; //penalize!
   }
 
-  if(shiftType === SHIFT_TYPES.EVENING && eveCountCount > dayCount){
+  if(shiftType === SHIFT_TYPES.EVENING && eveCount> dayCount){
     score += 50; //penalize!
   }
   //so this factor 2 counts how many days vs evenings shift the worker already has,
@@ -108,7 +111,7 @@ export function calculatePriority(worker, date, shiftType, schdeule, params){
 
 //finds all workers who CAN work a specific shift, then sorts them by priority to determine the
 //best canditate
-export function findAvailableWorkers(workers, date, shiftType, schdeule, params){
+function findAvailableWorkers(workers, date, shiftType, schedule, params){
   //returns an array of workers with priority information!
   //sorted by priority!
 
@@ -177,28 +180,24 @@ export function findAvailableWorkers(workers, date, shiftType, schdeule, params)
 
 //"main function"
 //the main entry point that generates a complete schedule for a date range
-export function generateSchedule(workers, params, startDate, endDate){
+export function generateSchedule(workers, params, startDate, endDate) {
 //returns an object with two properties
 //array of shift assignments and array of problems encountered
-
-const minPartialHours = params.minPartialShiftHours || 2;
-const shiftDuration = params.shiftDuration || 8;  //default hours for partial and normal
-
-const schedule = [];
-const warnings = [];
-
-const dates = [];
-const start = new Date(startDate + 'T12:00:00');
-const end = new Date(endDate + 'T12:00:00'); //to avoid timezone issues
-
-
-//create empty dates array, convert start + end date to objects
-//loop and for each day, add it to the array
-for(let d = new Date(start); d <= end; d.setDate(d.getDate()+ 1)){
-  dates.push(d.toISOString().split('T')[0]); //get date string only
-}
-
-  //debugging:
+  const minPartialHours = params.minPartialShiftHours || 2;
+  const shiftDuration = params.shiftDurationHours || 8;
+  
+  const schedule = [];
+  const warnings = [];
+  
+  // Create date array
+  const dates = [];
+  const start = new Date(startDate + 'T12:00:00'); //to avoid timezone issue
+  const end = new Date(endDate + 'T12:00:00');
+  
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    dates.push(d.toISOString().split('T')[0]);
+  }
+  
   console.log(`\n=== GENERATING SCHEDULE ===`);
   console.log(`Workers: ${workers.length}`);
   console.log(`Date range: ${startDate} to ${endDate}`);
@@ -207,72 +206,68 @@ for(let d = new Date(start); d <= end; d.setDate(d.getDate()+ 1)){
   console.log(`Day shifts needed: ${params.workersPerDayShift} per day`);
   console.log(`Evening shifts needed: ${params.workersPerEveningShift} per day`);
 
-
   //process each date !!
-  for (let i = length; i < dates.length; i++){
-    const date = dates[i]; //loop each day, get name
-    const daysOfWeek = new Date(date + 'T12:00:00').toISOString('en-US', {weekday: 'long'});
-      console.log(`\n--- Processing ${date} (${dayOfWeek}) [${i + 1}/${dates.length}] ---`);
-      console.log(`\nDay shift (need ${params.workersPerDayShift} workers):`);
+  for (let i = 0; i < dates.length; i++) {
+    const date = dates[i];
+    const dayOfWeek = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' });
+    
+    console.log(`\n--- Processing ${date} (${dayOfWeek}) [${i + 1}/${dates.length}] ---`);
+    
+    // ===== DAY SHIFT =====
+    console.log(`\nDay shift (need ${params.workersPerDayShift} workers):`);
+    
+    const dayAvailable = findAvailableWorkers(workers, date, SHIFT_TYPES.DAY, schedule, params);
+    console.log(`  Available: ${dayAvailable.length} workers`);
+    
+    const dayAssigned = [];
+    let dayWorkersFilled = 0;
+    
 
+    // assign available workers!
+    for (let i = 0; i < params.workersPerDayShift && i < dayAvailable.length; i++) {
+      const { worker, remaining } = dayAvailable[i];
+      const hours = Math.min(remaining, shiftDuration);
+      
+      schedule.push({
+        id: schedule.length + 1,
+        workerId: worker.id,
+        workerName: worker.name,
+        date,
+        shiftType: SHIFT_TYPES.DAY,
+        hours,
+        isPartial: hours < shiftDuration,
+        isEmpty: false
+      });
+      
+      dayAssigned.push(`${worker.name} (${hours}h)`);
+      dayWorkersFilled++;
+      console.log(`  ✓ Assigned: ${worker.name} - ${hours}h`);
+    }
 
-  //we call findavailableworkers() to get sorted list of canditates
-  const dayAvailable = findAvailableWorkers(workers,date,SHIFT_TYPES.DAY, schedule, params);
-  console.log(`  Available: ${dayAvailable.length} workers`);
+    //creating empty slots for unfilled positions!!
+    for(let i = dayWorkersFilled; i < params.workersPerDayShift; i++){
+      schedule.push({
+        id: schedule.length + 1,
+        workerId: null,
+        workerName: 'Unassigned',
+        date,
+        shiftType: SHIFT_TYPES.DAY,
+        hours: 0,
+        isPartial: false,
+        isEmpty: true
+      });
+      console.log(`  ○ Empty slot ${i + 1}`);
+    }
 
-  const daysAssigned = [];
-  let dayWorkersFilled = 0;
-
-
-  //here we assign available workers
-  for(let i = 0; i < params.workersPerDayShift && i < dayAvailable.length; i++){
-    const { worker, remaining} = dayAvailable[i];
-    const hours = Math.min(remaining, shiftDuration);
-
-    schedule.push({
-      id: schedule.length + 1,
-      workerId: worker.id,
-      workerName: worker.name,
-      date,
-      shiftType: SHIFT_TYPES.DAY,
-      hours,
-      isPartial: hours < shiftDuration,
-      isEmpty: false
-    });
-
-    dayAssigned.push(`${worker.name} (${hours}h)`);
-    dayWorkersFilled++;
-    console.log(`  ✓ Assigned: ${worker.name} - ${hours}h`);
-  }
-
-  //creating empty losts for unfilled positions
-  for (let i = dayWorkersFilled; i < params.workersPerDayShift; i++) {
-    schedule.push({
-      id: schedule.length + 1,
-      workerId: null,
-      workerName: 'Unassigned',
-      date,
-      shiftType: SHIFT_TYPES.DAY,
-      hours: 0,
-      isPartial: false,
-      isEmpty: true
-    });
-    console.log(`  ○ Empty slot ${i + 1}`);
-  }
-
-  //check for warnings
-  if(dayWorkersFilled < params.workersPerDayShift){
-    const msg = `Only ${dayWorkersFilled}/${params.workersPerDayShift} day workers assigned`;
-    console.log(`  ⚠️ ${msg}`);
-    warnings.push({ date, shiftType: 'day', message: msg, severity: 'warning' });
-  }
-
-
-
-
-
-  //now, we assign EVENING SHIFT workers
-  console.log(`\nEvening shift (need ${params.workersPerEveningShift} workers):`);
+    
+    if (dayAssigned.length < params.workersPerDayShift) {
+      const msg = `Only ${dayAssigned.length}/${params.workersPerDayShift} day workers assigned`;
+      console.log(`  ⚠️ ${msg}`);
+      warnings.push({ date, shiftType: 'day', message: msg });
+    }
+    
+    // ===== EVENING SHIFT =====
+    console.log(`\nEvening shift (need ${params.workersPerEveningShift} workers):`);
     
     const eveAvailable = findAvailableWorkers(workers, date, SHIFT_TYPES.EVENING, schedule, params);
     console.log(`  Available: ${eveAvailable.length} workers`);
@@ -321,13 +316,14 @@ for(let d = new Date(start); d <= end; d.setDate(d.getDate()+ 1)){
       warnings.push({ date, shiftType: 'evening', message: msg, severity: 'warning' });
     }
   }
-
+  
   console.log(`\n=== SCHEDULE COMPLETE ===`);
   console.log(`Total shifts assigned: ${schedule.length}`);
   console.log(`Warnings: ${warnings.length}\n`);
   
   return { schedule, warnings };
 }
+
 
 
 
@@ -341,7 +337,7 @@ export function getScheduleStats(schedule, workers){
 
     const dayShifts = shifts.filter(s => s.shiftType === SHIFT_TYPES.DAY);
     const eveShifts = shifts.filter(s => s.shiftType === SHIFT_TYPES.EVENING);
-    const partialShits = shifts.filter(s => s.isPartial); //partial meaning ANY type eve or day
+    const partialShifts = shifts.filter(s => s.isPartial); //partial meaning ANY type eve or day
 
     //construsct the return object with all the calculated values!!
     return {
