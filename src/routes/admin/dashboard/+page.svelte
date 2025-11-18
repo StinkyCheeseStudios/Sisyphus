@@ -359,7 +359,6 @@
 					/>
 				</label>
 	
-				<!-- ADD THIS FIELD -->
 				<label>
 					Max Consecutive Days:
 					<input
