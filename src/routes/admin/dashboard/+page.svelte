@@ -296,7 +296,7 @@
 	<!-- Parameters Section -->
 	<section class="section">
 		<h2>Schedule Parameters</h2>
-
+	
 		<form method="POST" action="?/updateParams" use:enhance class="params-form">
 			<div class="param-grid">
 				<label>
@@ -309,7 +309,7 @@
 						required
 					/>
 				</label>
-
+	
 				<label>
 					Evening Shift Workers:
 					<input
@@ -320,7 +320,7 @@
 						required
 					/>
 				</label>
-
+	
 				<label>
 					Shift Duration (hours):
 					<input
@@ -333,7 +333,7 @@
 						required
 					/>
 				</label>
-
+	
 				<label>
 					Min Partial Shift (hours):
 					<input
@@ -346,7 +346,7 @@
 						required
 					/>
 				</label>
-
+	
 				<label>
 					Max Workers Per Shift:
 					<input
@@ -358,8 +358,20 @@
 						required
 					/>
 				</label>
+	
+				<label>
+					Max Consecutive Days:
+					<input
+						type="number"
+						name="maxConsecutiveDays"
+						value={data.params.maxConsecutiveDays || 5}
+						min="3"
+						max="7"
+						required
+					/>
+				</label>
 			</div>
-
+	
 			<button type="submit">Update Parameters</button>
 		</form>
 	</section>
@@ -397,8 +409,10 @@
 			<thead>
 			  <tr>
 				<th>Worker</th>
-				<th>Target</th>
+				<th>Weekly Target</th>
+				<th>Total Target</th>
 				<th>Scheduled</th>
+				<th>Avg/Week</th>
 				<th>Remaining</th>
 				<th>Day</th>
 				<th>Evening</th>
@@ -409,9 +423,13 @@
 			  {#each displayStats as stat}
 				<tr class:under-scheduled={stat.remainingHours > 0}>
 				  <td>{stat.workerName}</td>
-				  <td>{formatHours(stat.targetHours)}h</td>
+				  <td>{formatHours(stat.targetHoursPerWeek)}h</td>
+				  <td>{formatHours(stat.targetHoursTotal)}h</td>
 				  <td>{formatHours(stat.scheduledHours)}h</td>
-				  <td class:warning-text={stat.remainingHours > 0}>{formatHours(stat.remainingHours)}h</td>
+				  <td>{stat.averagePerWeek}h</td>
+				  <td class:warning-text={stat.remainingHours > 0}>
+					{formatHours(stat.remainingHours)}h
+				  </td>
 				  <td>{stat.dayShifts} ({formatHours(stat.dayShiftsHours)}h)</td>
 				  <td>{stat.eveningShifts} ({formatHours(stat.eveningShiftsHours)}h)</td>
 				  <td>{stat.utilization}%</td>
