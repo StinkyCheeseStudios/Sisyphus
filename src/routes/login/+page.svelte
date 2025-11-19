@@ -1,15 +1,15 @@
 <script>
 	let showPassword = $state(false);
 
-  let { form } = $props();
+	let { form } = $props();
 </script>
 
 <div class="mx-auto w-[90%] md:w-[350px]">
 	<form
-		class="mx-auto my-24 flex flex-col gap-4 rounded-xl border border-(--main-3) bg-(--main-1)/90 p-6 shadow-lg
-      relative"
-    method="POST"
-    action="?/login"
+		class="relative mx-auto my-24 flex flex-col gap-4 rounded-xl border border-(--main-3) bg-(--main-1)/90 p-6
+      shadow-lg"
+		method="POST"
+		action="?/login"
 	>
 		<h1 class="text-center text-lg font-semibold text-(--fore-1)">Sign in</h1>
 
@@ -93,9 +93,10 @@
 			<div class="mx-auto w-full">
 				<button
 					type="submit"
-					class="relative flex w-full items-center justify-center gap-2 rounded-md bg-(--accent-1) 
-					px-4 py-2 text-(--fore-1) transition hover:brightness-110 focus:ring-2 focus:ring-(--accent-1)
-					cursor-pointer hover:opacity-80 ease-in-out hover:translate-y-1 hover:scale-105">
+					class="relative flex w-full cursor-pointer items-center justify-center gap-2 rounded-md
+					bg-(--accent-1) px-4 py-2 text-(--fore-1) transition ease-in-out hover:translate-y-1
+					hover:scale-105 hover:opacity-80 hover:brightness-110 focus:ring-2 focus:ring-(--accent-1)"
+				>
 					<!-- Login icon -->
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -118,12 +119,12 @@
 			</div>
 		</div>
 
-    <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 translate-y-full w-full text-center">
-      {#if form?.error}
-        <p class="text-error">{form.error}</p>
-      {:else if form?.success}
-        <p class="text-success">{form.success}</p>
-      {/if}
-    </div>
+		<div class="absolute -bottom-5 left-1/2 w-full -translate-x-1/2 translate-y-full text-center">
+			{#if form?.error}
+				<p class="text-error">{form.error}</p>
+			{:else if form?.success}
+				<p class="text-success">{form.success}</p>
+			{/if}
+		</div>
 	</form>
 </div>
