@@ -38,7 +38,8 @@ export async function load() {
         workersPerEveningShift: 2,
         shiftDurationHours: 8,
         minPartialShiftHours: 2,
-        maxWorkersPerShift: 4
+        maxWorkersPerShift: 4,
+        maxConsecutiveDays: 5
       },
       savedSchedule: null
     };
@@ -141,7 +142,8 @@ export const actions = {
       workersPerEveningShift: parseInt(formData.get('workersPerEveningShift')),
       shiftDurationHours: parseFloat(formData.get('shiftDurationHours')),
       minPartialShiftHours: parseFloat(formData.get('minPartialShiftHours')),
-      maxWorkersPerShift: parseInt(formData.get('maxWorkersPerShift'))
+      maxWorkersPerShift: parseInt(formData.get('maxWorkersPerShift')),
+      maxConsecutiveDays: parseInt(formData.get('maxConsecutiveDays'))
     };
     
     // Validation
@@ -180,6 +182,10 @@ export const actions = {
       //fetch data from DB
       const workers = await getAllWorkers();
       const params = await getScheduleParams();
+
+      console.log('🔍 DEBUG PARAMS:', JSON.stringify(params, null, 2));
+      console.log('🔍 Shift Duration Type:', typeof params.shiftDurationHours);
+      console.log('🔍 Shift Duration Value:', params.shiftDurationHours);
       
       if (workers.length === 0) {
         return fail(400, { error: 'No workers available. Please add workers first.' });

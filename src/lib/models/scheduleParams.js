@@ -31,6 +31,12 @@ const scheduleParamsSchema = new mongoose.Schema({
     min: 1,
     default: 4
   },
+  maxConsecutiveDays: {
+    type: Number,
+    required: true,
+    min: 3, //this is the minimum so...
+    default: 5
+  },
   updatedAt: {
     type: Date,
     default: Date.now

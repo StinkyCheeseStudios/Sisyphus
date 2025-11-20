@@ -18,7 +18,8 @@ export async function getScheduleParams() {
       workersPerEveningShift: 2,
       shiftDurationHours: 8,
       minPartialShiftHours: 2,
-      maxWorkersPerShift: 4
+      maxWorkersPerShift: 4,
+      maxConsecutiveDays: 5
     });
   }
   
@@ -28,7 +29,8 @@ export async function getScheduleParams() {
     workersPerEveningShift: params.workersPerEveningShift,
     shiftDurationHours: params.shiftDurationHours,
     minPartialShiftHours: params.minPartialShiftHours,
-    maxWorkersPerShift: params.maxWorkersPerShift
+    maxWorkersPerShift: params.maxWorkersPerShift,
+    maxConsecutiveDays: params.maxConsecutiveDays
   };
 }
 
@@ -52,6 +54,7 @@ export async function updateScheduleParams(updates) {
       shiftDurationHours: 8,
       minPartialShiftHours: 2,
       maxWorkersPerShift: 4,
+      maxConsecutiveDays: 5,
       ...updates
     });
   } else {
@@ -67,6 +70,7 @@ export async function updateScheduleParams(updates) {
     workersPerEveningShift: params.workersPerEveningShift,
     shiftDurationHours: params.shiftDurationHours,
     minPartialShiftHours: params.minPartialShiftHours,
-    maxWorkersPerShift: params.maxWorkersPerShift
+    maxWorkersPerShift: params.maxWorkersPerShift,
+    maxConsecutiveDays: params.maxConsecutiveDays
   };
 }
