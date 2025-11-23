@@ -1,4 +1,6 @@
 <script>
+  import { Eye, EyeOff } from 'lucide-svelte';
+
 	let showPassword = $state(false);
 
 	let { form } = $props();
@@ -6,30 +8,30 @@
 
 <div class="mx-auto w-[90%] md:w-[350px]">
 	<form
-		class="relative mx-auto my-24 flex flex-col gap-4 rounded-xl border border-(--main-3) bg-(--main-1)/90 p-6
-      shadow-lg"
-		method="POST"
-		action="?/login"
+		class="mx-auto my-24 flex flex-col gap-4 rounded-xl border border-main-3 bg-main/90 p-6 shadow-lg
+      relative"
+    method="POST"
+    action="?/login"
 	>
-		<h1 class="text-center text-lg font-semibold text-(--fore-1)">Sign in</h1>
+		<h1 class="text-center text-lg font-semibold text-fore">Sign in</h1>
 
 		<div class="mx-auto flex w-full flex-col items-center gap-6 p-4">
 			<!-- USERNAME -->
 			<div class="field relative flex w-full flex-col gap-2">
-				<label for="username" class="mx-auto text-center text-sm text-(--fore-2)"> Username </label>
+				<label for="username" class="mx-auto text-center text-sm text-fore-2"> Username </label>
 
 				<input
 					id="username"
 					name="username"
 					type="text"
 					autocomplete="username"
-					class="mx-auto form-input w-full rounded-md border border-(--main-3) bg-(--main-2) px-3 py-2 pr-10 text-(--fore-1) focus:border-(--accent-1) focus:ring-2 focus:ring-(--accent-1)"
+					class="mx-auto form-input w-full rounded-md border border-main-3 bg-main-2 px-3 py-2 pr-10 text-fore focus:border-accent focus:ring-2 focus:ring-accent"
 				/>
 			</div>
 
 			<!-- PASSWORD -->
 			<div class="field relative flex w-full flex-col gap-2">
-				<label for="password" class="mx-auto text-center text-sm text-(--fore-2)"> Password </label>
+				<label for="password" class="mx-auto text-center text-sm text-fore-2"> Password </label>
 
 				<!-- WRAPPER: same width as the input; THIS is the element the button is positioned inside -->
 				<div class="relative mx-auto w-full">
@@ -38,53 +40,20 @@
 						name="password"
 						type={showPassword ? 'text' : 'password'}
 						autocomplete="current-password"
-						class="block w-full rounded-md border border-(--main-3) bg-(--main-2) px-3 py-2 pr-14 text-(--fore-1) focus:border-(--accent-1) focus:ring-2 focus:ring-(--accent-1)"
+						class="block w-full rounded-md border border-main-3 bg-main-2 px-3 py-2 pr-14 text-fore focus:border-accent focus:ring-2 focus:ring-accent"
 					/>
 
 					<!-- TOGGLE: fills the input height (inset-y-0) and centers the icon with flex -->
 					<button
 						type="button"
-						class="absolute inset-y-0 right-3 z-10 flex items-center justify-center p-0 text-(--fore-1) hover:opacity-80"
+						class="absolute inset-y-0 right-3 z-10 flex items-center justify-center p-0 text-fore hover:opacity-80"
 						onclick={() => (showPassword = !showPassword)}
 						aria-label="Toggle password visibility"
 					>
 						{#if showPassword}
-							<!-- Eye open -->
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								viewBox="0 0 24 24"
-								class="block"
-							>
-								<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-								<circle cx="12" cy="12" r="3" />
-							</svg>
+							<Eye size={20} />
 						{:else}
-							<!-- Eye closed -->
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								viewBox="0 0 24 24"
-								class="block"
-							>
-								<path
-									d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.91 20.91 0 0 1 5.06-6.88"
-								/>
-								<path d="M1 1l22 22" />
-								<path d="M14.12 14.12A3 3 0 0 1 9.88 9.88" />
-							</svg>
+							<EyeOff size={20} />
 						{/if}
 					</button>
 				</div>

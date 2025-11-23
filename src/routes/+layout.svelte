@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
   import { Sun, Moon } from 'lucide-svelte';
@@ -63,11 +64,20 @@
   <Header {toggleMenu} {isMenuOpen} />
   
   <!--Flex row container for sidebar navigation and pages (children)-->
-  <div class="flex grow">
+  <div class="flex grow relative">
     <SidebarNav {isMenuOpen} {toggleDarkMode} {isDark} {toggleMenu} />
 
     <div class="grow">
       {@render children?.()}
     </div>
+
+    {#if isMenuOpen}
+      <div 
+        class="absolute inset-0 bg-black/30 z-8 backdrop-blur-xs lg:hidden"
+        transition:fade={{ duration: 250 }}
+        aria-hidden="true"
+        onclick={toggleMenu}
+      ></div>
+    {/if}
   </div>
 </div>
