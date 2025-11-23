@@ -57,7 +57,7 @@
 </script>
 
 <nav
-	class="fixed lg:sticky top-0 left-0 z-2 flex h-dvh w-dvw flex-col bg-main-2 transition-all duration-300
+	class="fixed lg:sticky top-0 left-0 z-9 flex h-dvh w-dvw flex-col bg-main-2 transition-all duration-300
     sm:w-75 lg:translate-x-0 shrink-0
     {isMenuOpen ? 'lg:w-75' : '-translate-x-full lg:w-14'}"
 >
@@ -65,6 +65,7 @@
 	<div 
     class="h-14 shrink-0 w-full relative transition duration-300
       {isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
+    inert="true"
   >
 	  <Logo />
 	</div>
@@ -95,7 +96,7 @@
       <span class="relative bottom-px text-fore-3">
         Appearance
       </span>
-      <DarkModeToggle {isDark} {toggleDarkMode} />
+      <DarkModeToggle {isDark} {toggleDarkMode} {isMenuOpen} {toggleMenu} />
     </li>
   </ul>
 </nav>
