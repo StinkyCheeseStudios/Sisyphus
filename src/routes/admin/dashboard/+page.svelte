@@ -205,8 +205,8 @@
 <!--IT IS RECOMMENDED THAT EACH "SECTION" IS CLOSED WHEN NOT BEING EDITED-->
 <!--THIS MAKES IT MORE READABLE AND EASIER TO NAVIGATE THIS HOT PILE OF-->
 
-<div class="mx-auto w-full max-w px-4 sm:px-6 lg:px-8 py-6">
-	<h3 class="mb-4 text-2xl font-semibold text-[(--fore-1)]">Admin Controls</h3>
+<div class="mx-auto flex w-full flex-col items-center gap-1 p-4"> 
+	<h1 class="mb-1 text-2xl font-semibold text-[(--fore-1)]">Admin Controls</h1>
 
 	{#if form?.error}
 		<div class="error-box">{form.error}</div>
@@ -382,8 +382,8 @@
 </div>
 
 <!-- Parameters Section -->
-<section class="py-6 p-8">
-	<h2 class="mb-4 text-2xl font-semibold text-(--fore-1)">Schedule Parameters</h2>
+<section class="mx-auto flex w-full flex-col items-center gap-1 p-4">
+	<h2 class="mb-1 text-2xl font-semibold text-(--fore-1)">Schedule Parameters</h2>
 
 	<form
 		method="POST"
@@ -512,8 +512,8 @@
 </section>
 
 <!-- Generate Schedule Section -->
-<section class="py-6 p-8">
-	<h2 class="mb-4 text-2xl font-semibold text-(--fore-1)">Generate Schedule</h2>
+<section class="mx-auto flex w-full flex-col items-center gap-1 p-4">
+	<h2 class="mb-1 text-2xl font-semibold text-(--fore-1)">Generate Schedule</h2>
 
 	<form
 		method="POST"
@@ -569,8 +569,8 @@
 <!-- Statistics does not work on load, only when modifying or generating schedule -->
 <!--Do we need this? if not we can ignore/get rid of it-->
 {#if displaySchedule || displayStats}
-	<section class="py-6 p-8">
-		<h3 class="mb-4 text-xl font-semibold text-(--fore-1)">Statistics</h3>
+	<section class="mx-auto flex w-full flex-col items-center gap-1">
+		<h2 class="mb-1 text-xl font-semibold text-(--fore-1)">Statistics</h2>
 
 		<div
 			class="overflow-x-auto rounded-xl border border-(--main-3)
@@ -653,7 +653,7 @@
 <!-- Schedule Display -->
 {#if displaySchedule}
 
-	<div class="mx-auto max-w-[1200px] p-8">
+	<div class="mx-auto flex w-full flex-col items-center gap-6 p-4">
 	<section class="rounded-xl border border-(--main-3) bg-(--main-1)/90 p-6 shadow-lg">
 
 		<!-- HEADER -->

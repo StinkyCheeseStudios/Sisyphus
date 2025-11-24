@@ -189,7 +189,10 @@
        {isCalendarPickerOpen ? 'max-w-105' : 'max-w-full'}"
     >
       <button 
-        class="w-18 h-full bg-main-2 flex justify-center items-center rounded-md shrink-0 z-7"
+        class="w-18 h-full bg-main-2 flex justify-center items-center rounded-md shrink-0 z-7
+        transition-all duration-200
+        hover:scale-105 hover:brightness-110
+        active:scale-90 active:brightness-90"
         onclick={prevWeek}
       >
         <ArrowBigLeft size={22} />
@@ -222,7 +225,10 @@
       {/if}
 
       <button 
-        class="w-18 h-full bg-main-2 flex justify-center items-center rounded-md shrink-0 z-7"
+        class="w-18 h-full bg-main-2 flex justify-center items-center rounded-md shrink-0 z-7
+        transition-all duration-200
+        hover:scale-105 hover:brightness-110
+        active:scale-90 active:brightness-90"
         aria-label="Select next week. Currently on 
           {ariaWeeks[selectedWeek.weekIndex]} week of {months.long[month]} {year}"
         onclick={nextWeek}

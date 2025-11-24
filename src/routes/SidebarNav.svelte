@@ -12,6 +12,7 @@
     Sun, 
     Moon,
     UserPlus,
+    LayoutDashboard,
     LogIn
   } from 'lucide-svelte';
 
@@ -48,6 +49,7 @@
 			icon: ShieldUser,
 			text: 'Administration',
 			dropdownItems: [
+        { icon: LayoutDashboard, text: 'Admin Dashboard', href: '/admin/dashboard' },
 				{ icon: Pickaxe, text: 'Send Workers to Mine', href: '/work/mining' },
 				{ icon: BanknoteArrowDown, text: 'Drop Employee Wage', href: '/wages/reduce' },
         { icon: BanknoteX, text: 'Stop Paying Employees', href: '/wages/remove' }
