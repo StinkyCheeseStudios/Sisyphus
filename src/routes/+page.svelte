@@ -53,7 +53,7 @@
       return;
     }
     prevMonth();
-    setSelectedWeek(calendar.length - 1);
+    isCalendarPickerOpen ? setSelectedWeek(calendar.length - 1) : setSelectedWeek(calendar.length - 2);
   }
   function nextWeek() {
     if (selectedWeek.weekIndex < calendar.length - 1) {
@@ -61,7 +61,7 @@
       return;
     }
     nextMonth();
-    setSelectedWeek(0);
+    isCalendarPickerOpen ? setSelectedWeek(0) : setSelectedWeek(1);
   }
 
   // This stores the nicely formatted string ("dd.mm — dd.mm") and auto-updates when selectedWeek changes.

@@ -76,7 +76,7 @@
             {#if (selectedWeek.weekIndex === weekIndex && selectedWeek.month === month && selectedWeek.year === year)}
               <div
                 class="absolute left-1 right-1 h-full top-0 rounded-md bg-main-3/80 border border-main-4 -z-2"
-                in:fade={{ duration: 300 }}
+                in:fade={{ duration: 500 }}
               ></div>
             {/if}
 
