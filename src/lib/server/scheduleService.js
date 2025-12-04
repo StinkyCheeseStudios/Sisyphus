@@ -75,7 +75,7 @@ export async function saveSchedule(startDate, endDate, shifts, warnings = []) {
 
  // const plain = schedule.toObject({versionKey: false});
 
-  return JSON.parse(JSON.stringify(schedule));
+ // return JSON.parse(JSON.stringify(schedule));
 
   return {
     id: schedule._id.toString(),
@@ -84,7 +84,7 @@ export async function saveSchedule(startDate, endDate, shifts, warnings = []) {
     shifts:   serializeShifts(schedule.shifts),
     warnings:   schedule.warnings,
     createdAt:     schedule.createdAt,
-    updatedAt:     pschedule.updatedAt
+    updatedAt:     schedule.updatedAt
   };
 }
 
