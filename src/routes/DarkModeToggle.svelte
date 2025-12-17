@@ -9,7 +9,6 @@
   class="relative w-12 h-8 bg-main-3 rounded-full" 
   aria-label="Toggle dark mode. Currently on {isDark ? 'dark' : 'light'} mode"
   onfocusin={() => { if (!isMenuOpen) { toggleMenu() }}}
-  onfocusout={() => { if (isMenuOpen) { toggleMenu() }}}
 >
   <div 
     class="bg-main-2 absolute top-1 bottom-1 aspect-square rounded-full transition-[left] duration-300

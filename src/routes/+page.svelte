@@ -53,7 +53,7 @@
       return;
     }
     prevMonth();
-    setSelectedWeek(calendar.length - 1);
+    isCalendarPickerOpen ? setSelectedWeek(calendar.length - 1) : setSelectedWeek(calendar.length - 2);
   }
   function nextWeek() {
     if (selectedWeek.weekIndex < calendar.length - 1) {
@@ -61,7 +61,7 @@
       return;
     }
     nextMonth();
-    setSelectedWeek(0);
+    isCalendarPickerOpen ? setSelectedWeek(0) : setSelectedWeek(1);
   }
 
   // This stores the nicely formatted string ("dd.mm — dd.mm") and auto-updates when selectedWeek changes.
@@ -188,13 +188,22 @@
       class="flex items-center h-12 gap-1 relative w-full transition-all duration-200
        {isCalendarPickerOpen ? 'max-w-105' : 'max-w-full'}"
     >
-      <button 
-        class="w-18 h-full bg-main-2 flex justify-center items-center rounded-md shrink-0 z-7"
-        onclick={prevWeek}
-      >
-        <ArrowBigLeft size={22} />
-      </button>
+      {#snippet scrollWeeksButton(direction, icon, on_click)}
+        <button 
+          class="w-18 h-full bg-main-2 flex justify-center items-center rounded-md shrink-0 z-7
+            transition-all duration-200
+            hover:scale-105 hover:brightness-90
+            active:scale-90 active:brightness-105"
+          aria-label="Select {direction} week. Currently on 
+            {ariaWeeks[selectedWeek.weekIndex]} week of {months.long[month]} {year}"
+          onclick={on_click}
+        >
+          <icon.icon size={22} />
+        </button>
+      {/snippet}
 
+      {@render scrollWeeksButton("previous", { icon: ArrowBigLeft }, prevWeek)}
+      
       <button
         class="grow h-full w-full flex justify-center items-center gap-2 bg-main-2 rounded-md z-7"
         aria-label="Select previous week. Currently on 
@@ -204,6 +213,7 @@
         <CalendarSearch size={22} />
         {weekLabel}
       </button>
+
       <!--Calendar picker element that pops up on click of this button above-->
       {#if isCalendarPickerOpen}
         <CalendarWeekPicker 
@@ -221,14 +231,7 @@
         />
       {/if}
 
-      <button 
-        class="w-18 h-full bg-main-2 flex justify-center items-center rounded-md shrink-0 z-7"
-        aria-label="Select next week. Currently on 
-          {ariaWeeks[selectedWeek.weekIndex]} week of {months.long[month]} {year}"
-        onclick={nextWeek}
-      >
-        <ArrowBigRight size={22} />
-      </button>
+      {@render scrollWeeksButton("next", { icon: ArrowBigRight }, nextWeek)}
     </div>
 
     <!--Days of week-->

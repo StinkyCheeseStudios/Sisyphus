@@ -1,99 +1,124 @@
 <script>
-  import { Eye, EyeOff } from 'lucide-svelte';
+  import { Eye, EyeOff, LogIn, Info } from "lucide-svelte";
+	import { fade, fly, slide } from "svelte/transition";
+	import PinInput from "./PinInput.svelte";
 
-	let showPassword = $state(false);
+  let { form } = $props();
 
-	let { form } = $props();
+  let showPassword = $state(false);
+  let isLogIn = $state(true);
 </script>
 
-<div class="mx-auto w-[90%] md:w-[350px]">
-	<form
-		class="mx-auto my-24 flex flex-col gap-4 rounded-xl border border-main-3 bg-main/90 p-6 shadow-lg
-      relative"
+
+<div class="w-full h-full flex flex-col justify-center items-center gap-1">
+  <form 
+    action="?/login" 
     method="POST"
-    action="?/login"
-	>
-		<h1 class="text-center text-lg font-semibold text-fore">Sign in</h1>
+    class="bg-main-2 border border-main-3 flex flex-col p-4 rounded-md gap-4"
+  >
 
-		<div class="mx-auto flex w-full flex-col items-center gap-6 p-4">
-			<!-- USERNAME -->
-			<div class="field relative flex w-full flex-col gap-2">
-				<label for="username" class="mx-auto text-center text-sm text-fore-2"> Username </label>
+    <div class="w-full flex justify-between relative">
+      <button
+        type="button"
+        onclick={() => { isLogIn = true }}
+        class="flex-1 py-2 text-lg font-semibold rounded-md hover:scale-105 z-2 
+          transition-scale duration-300 {isLogIn ? 'text-fore' : 'text-fore-2'}"
+      >
+        Log in
+      </button>
+      <button
+        type="button"
+        onclick={() => { isLogIn = false }}
+        class="flex-1 py-2 text-lg font-semibold rounded-md hover:scale-105 z-2 
+          transition-scale duration-300 {isLogIn ? 'text-fore-2' : 'text-fore'}"
+      >
+        Register
+      </button>
+      <div
+        class="absolute w-1/2 bg-main-3/50 h-full rounded-md transition-all duration-300 border border-main-3
+          {isLogIn ? 'left-0' : 'left-1/2'}"
+      ></div>
+    </div>
 
-				<input
-					id="username"
-					name="username"
-					type="text"
-					autocomplete="username"
-					class="mx-auto form-input w-full rounded-md border border-main-3 bg-main-2 px-3 py-2 pr-10 text-fore focus:border-accent focus:ring-2 focus:ring-accent"
-				/>
-			</div>
+    {#if !isLogIn}
+      <div
+        in:slide={{ duration: 300, axis: "x" }}
+        out:fly={{ duration: 300, x: 100 }}
+        class="flex flex-col gap-1 items-center"
+      >
+        <span class="text-nowrap">Sign-up code</span>
+        <PinInput />
+      </div>
+    {/if}
 
-			<!-- PASSWORD -->
-			<div class="field relative flex w-full flex-col gap-2">
-				<label for="password" class="mx-auto text-center text-sm text-fore-2"> Password </label>
+    <div class="flex flex-col gap-1">
+      <label 
+        for="username"
+        class="bg-main-3 w-min px-2 rounded-md text-sm text-fore-2"
+      >
+        Username
+      </label>
+      <input 
+        required
+        type="text" 
+        name="username"
+        class="bg-main-3 border border-main-4 rounded-md w-70 focus:ring-accent"
+      >
+    </div>
 
-				<!-- WRAPPER: same width as the input; THIS is the element the button is positioned inside -->
-				<div class="relative mx-auto w-full">
-					<input
-						id="password"
-						name="password"
-						type={showPassword ? 'text' : 'password'}
-						autocomplete="current-password"
-						class="block w-full rounded-md border border-main-3 bg-main-2 px-3 py-2 pr-14 text-fore focus:border-accent focus:ring-2 focus:ring-accent"
-					/>
+    <div class="flex flex-col gap-1">
+      <label 
+        for="password"
+        class="bg-main-3 w-min px-2 rounded-md text-sm text-fore-2"
+      >
+        Password
+      </label>
+      <div class="relative">
+        <input
+          autocomplete="off"
+          required
+          type={showPassword ? 'text' : 'password'}
+          name="password"
+          class="bg-main-3 border border-main-4 rounded-md w-70 focus:ring-accent"
+        >
+        <button
+          type="button"
+          onclick={() => { showPassword = !showPassword }}
+          class="absolute right-0 top-1/2 -translate-1/2"
+        >
+          {#if showPassword}
+            <EyeOff size={22} />
+          {:else}
+            <Eye size={22} />
+          {/if}
+        </button>
+      </div>
+    </div>
 
-					<!-- TOGGLE: fills the input height (inset-y-0) and centers the icon with flex -->
-					<button
-						type="button"
-						class="absolute inset-y-0 right-3 z-10 flex items-center justify-center p-0 text-fore hover:opacity-80"
-						onclick={() => (showPassword = !showPassword)}
-						aria-label="Toggle password visibility"
-					>
-						{#if showPassword}
-							<Eye size={20} />
-						{:else}
-							<EyeOff size={20} />
-						{/if}
-					</button>
-				</div>
-			</div>
+    <button
+      class="flex gap-2 justify-center items-center bg-accent py-3 rounded-md text-main font-semibold group"
+    >
+      {isLogIn ? 'Log in' : 'Register'}
+      <LogIn 
+        size={22} 
+        class="relative left-0 group-hover:left-1 group-hover:scale-105 transition-all duration-300" 
+      />
+    </button>
 
-			<div class="mx-auto w-full">
-				<button
-					type="submit"
-					class="relative flex w-full cursor-pointer items-center justify-center gap-2 rounded-md
-					bg-(--accent-1) px-4 py-2 text-(--fore-1) transition ease-in-out hover:translate-y-1
-					hover:scale-105 hover:opacity-80 hover:brightness-110 focus:ring-2 focus:ring-(--accent-1)"
-				>
-					<!-- Login icon -->
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-						<polyline points="10 17 15 12 10 7" />
-						<line x1="3" y1="12" x2="15" y2="12" />
-					</svg>
+    <input hidden name="isLogIn" value={isLogIn}>
+  </form>
 
-					Login
-				</button>
-			</div>
-		</div>
-
-		<div class="absolute -bottom-5 left-1/2 w-full -translate-x-1/2 translate-y-full text-center">
-			{#if form?.error}
-				<p class="text-error">{form.error}</p>
-			{:else if form?.success}
-				<p class="text-success">{form.success}</p>
-			{/if}
-		</div>
-	</form>
+  <div
+    class=""
+  >
+    {#if form?.error}
+      <span class="text-error">
+        {form?.error}
+      </span>
+    {:else if form?.success}
+      <span class="text-success">
+        {form?.success}
+      </span>
+    {/if}
+  </div>
 </div>
