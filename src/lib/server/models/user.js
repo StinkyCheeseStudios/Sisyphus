@@ -1,6 +1,11 @@
 import { mongoose } from "mongoose";
 
 const UserSchema = new mongoose.Schema({
+  employee: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Worker",
+    required: true,
+  },
   username: {
     type: String,
     required: true,
@@ -14,7 +19,8 @@ const UserSchema = new mongoose.Schema({
   },
   isAdmin: {
     type: Boolean,
-    required: true
+    default: false,
+    required: true,
   }
 })
 
