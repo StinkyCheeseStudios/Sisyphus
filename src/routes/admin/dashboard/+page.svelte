@@ -216,11 +216,12 @@
 		<div class="success-box">Operation successful!</div>
 	{/if}
 
-	<!-- Workers Section -->
+
+
 	<section class="py-6">
 		<h2 class="mb-4 text-2xl font-semibold text-[(--fore-1)]">Workers</h2>
 
-		<!-- ADD WORKER FORM -->
+		ADD WORKER FORM 
 		<form
 			method="POST"
 			action="?/addWorker"
@@ -254,7 +255,7 @@
              focus:ring-2 focus:ring-(--accent-1) sm:w-auto"
 			/>
 
-			<!-- ADD WORKER BUTTON (matches login) -->
+			<
 			<button
 				type="submit"
 				class="relative flex cursor-pointer items-center justify-center gap-2 rounded-md
@@ -264,10 +265,10 @@
 			>
 				Add Worker
 			</button>
-		</form>
+			</form> -->
 
 		<!-- WORKERS LIST -->
-		<div class="mt-6 flex flex-col gap-4">
+	<!--<div class="mt-6 flex flex-col gap-4">
 			{#each data.workers as worker}
 				<div
 					class="flex items-center justify-between rounded-md border
@@ -275,7 +276,7 @@
                shadow-sm"
 				>
 					{#if editingWorkerId === worker.id}
-						<!-- EDIT MODE FORM -->
+						
 						<form
 							method="POST"
 							action="?/updateWorker"
@@ -310,7 +311,7 @@
                      focus:ring-(--accent-1) sm:w-auto"
 							/>
 
-							<!-- SAVE BUTTON -->
+							
 							<button
 								type="submit"
 								class="relative flex cursor-pointer items-center justify-center gap-2 rounded-md
@@ -321,7 +322,7 @@
 								Save
 							</button>
 
-							<!-- CANCEL BUTTON -->
+							
 							<button
 								type="button"
 								class="relative flex cursor-pointer items-center justify-center gap-2 rounded-md
@@ -334,14 +335,14 @@
 							</button>
 						</form>
 					{:else}
-						<!-- DISPLAY MODE -->
+						
 						<div class="flex flex-col">
 							<strong class="text-(--fore-1)">{worker.name}</strong>
 							<span class="text-(--fore-2)">{worker.hoursPerWeek}h/week</span>
 						</div>
 
 						<div class="flex gap-3">
-							<!-- EDIT BUTTON (matches login) -->
+							
 							<button
 								class="relative flex cursor-pointer items-center justify-center gap-2 rounded-md
                      bg-(--accent-1) px-3 py-2 text-[(--fore-1)]
@@ -352,7 +353,7 @@
 								Edit
 							</button>
 
-							<!-- DELETE BUTTON -->
+							
 							<form method="POST" action="?/deleteWorker" use:enhance>
 								<input type="hidden" name="workerId" value={worker.id} />
 								<button
@@ -379,7 +380,7 @@
 			{/if}
 		</div>
 	</section>
-</div>
+</div> -->	
 
 <!-- Parameters Section -->
 <section class="mx-auto flex w-full flex-col items-center gap-1 p-4">
@@ -681,6 +682,18 @@
 
 			<!-- ACTION BUTTONS -->
 			{#if scheduleSource !== 'editing'}
+			{#if scheduleSource === 'generated'}
+<!--this fat button is the save button and only comes if schedule has been edited or neww one generated-->
+            <button 
+              class="btn-save" 
+              onclick={() => {
+                document.getElementById('save-schedule-form').requestSubmit();
+				console.log("save button called");
+              }}
+            >
+              💾 Save Schedule :]]]]
+            </button>
+          {/if}
 				<button
 					onclick={enterEditMode}
 					class="relative flex cursor-pointer items-center justify-center gap-2 rounded-md
@@ -911,21 +924,24 @@
 			</div>
 		</div>
 
-		<!-- HIDDEN SAVE FORM -->
+		<!-- HIDDEN SAVE FORMS -->
+		<!-- Form for saving newly generated schedule -->
+		{#if generatedSchedule && scheduleSource === 'generated'}
+		<form method="POST" action="?/saveSchedule" use:enhance id="save-schedule-form">
+  			<input type="hidden" name="startDate" value={scheduleStartDate} />
+  			<input type="hidden" name="endDate" value={scheduleEndDate} />
+  			<input type="hidden" name="shifts" value={JSON.stringify(generatedSchedule)} />
+  			<input type="hidden" name="warnings" value={JSON.stringify(generatedWarnings)} />
+		</form>
+		{/if}
+
+		<!-- Form for saving edited schedule -->
 		{#if isEditMode && scheduleModified}
 			<form method="POST" action="?/saveSchedule" use:enhance id="save-edited-schedule">
-				<input
-					type="hidden"
-					name="startDate"
-					value={scheduleStartDate || data.savedSchedule?.startDate}
-				/>
-				<input
-					type="hidden"
-					name="endDate"
-					value={scheduleEndDate || data.savedSchedule?.endDate}
-				/>
-				<input type="hidden" name="shifts" value={JSON.stringify(editedSchedule)} />
-				<input type="hidden" name="warnings" value={JSON.stringify(editWarnings)} />
+  				<input type="hidden" name="startDate" value={scheduleStartDate || data.savedSchedule?.startDate} />
+  				<input type="hidden" name="endDate" value={scheduleEndDate || data.savedSchedule?.endDate} />
+  				<input type="hidden" name="shifts" value={JSON.stringify(editedSchedule)} />
+  				<input type="hidden" name="warnings" value={JSON.stringify(editWarnings)} />
 			</form>
 		{/if}
 	</section>
