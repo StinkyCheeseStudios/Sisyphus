@@ -5,7 +5,10 @@
   let { toggleMenu, isMenuOpen } = $props();
 </script>
 
-<header class="sticky top-0 h-14 bg-main-2 flex z-10 lg:invisible lg:fixed lg:pointer-events-none">
+<header 
+  class="sticky top-0 h-14 bg-main-2 flex z-10 lg:invisible lg:fixed lg:pointer-events-none
+    shadow-[0_0_10px_10px] {isMenuOpen ? 'shadow-transparent' : 'shadow-black/40'} transition-shadow duration-300"
+>
 
   <!--Menu toggle button-->
   <div class="h-14 w-14 flex justify-center items-center bg-main-2 visible">

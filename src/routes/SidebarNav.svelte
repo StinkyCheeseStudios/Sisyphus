@@ -6,7 +6,7 @@
   import { 
     House, 
     ShieldUser, 
-    Pickaxe, 
+    IdCardLanyard, 
     BanknoteArrowDown, 
     BanknoteX, 
     Sun, 
@@ -39,7 +39,6 @@
   }
 
   /* TO BE CHANGED */
-  /* These are obviously mostly joke routes and nav buttons for visual testing purposes only */
   const NavigationItems = [
 		{ isDropdown: false, icon: House, text: 'Home', href: '/' },
     { isDropdown: false, icon: UserPlus, text: 'Add User (temp)', href: '/temp/add-user' },
@@ -49,10 +48,8 @@
 			icon: ShieldUser,
 			text: 'Administration',
 			dropdownItems: [
-        { icon: LayoutDashboard, text: 'Admin Dashboard', href: '/admin/dashboard' },
-				{ icon: Pickaxe, text: 'Send Workers to Mine', href: '/work/mining' },
-				{ icon: BanknoteArrowDown, text: 'Drop Employee Wage', href: '/wages/reduce' },
-        { icon: BanknoteX, text: 'Stop Paying Employees', href: '/wages/remove' }
+        { icon: LayoutDashboard, text: 'Dashboard', href: '/admin/dashboard' },
+				{ icon: IdCardLanyard, text: 'Employees', href: '/admin/employees' },
 			]
 		}
 	];

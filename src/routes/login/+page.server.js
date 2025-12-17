@@ -1,5 +1,6 @@
 import * as argon2 from 'argon2';
 import { User } from '$lib/server/models/user.js';
+import { SignupToken } from '$lib/server/models/signup.js';
 import { Session } from '$lib/server/models/session.js';
 import { fail } from '@sveltejs/kit';
 
@@ -8,8 +9,36 @@ export const actions = {
     const data = await request.formData();
     const username = data.get('username');
     const password = data.get('password');
+    const isLogIn = data.get('isLogIn');
+    const signupCode = data.get('signupCode');
 
     try {
+      if (isLogIn === "false") {
+        let signupToken = await SignupToken.findOne({ code: signupCode });
+
+        if (!signupToken) {
+          return fail(401, { error: 'Invalid Sign-up code'});
+        }
+        if (signupToken.expiresAt <= Date.now()) {
+          return fail(401, { error: 'Sign-up code expired'})
+        }
+        if (signupToken.isUsed) {
+          return fail(401, { error: 'Sign-up code already used' })
+        }
+
+        const hash = await argon2.hash(password);
+
+        await User.create({
+          employee: signupToken.employee,
+          username: username,
+          password: hash,
+        });
+
+        await SignupToken.updateOne({ _id: signupToken._id }, { isUsed: true });
+
+        return { success: 'Successfully created user' }
+      }
+
       // Try to find user by username in database
       const user = await User.findOne({ username });
       // If username is not found then return a fail with an error message to be displayed on the page
@@ -28,14 +57,14 @@ export const actions = {
       // So we can set a session in the DB and set the cookie.
       const session = await Session.create({
         userId: user._id,
-        expiresAt: new Date(Date.now() + 30*60*1000) // 30 min in ms
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Expires in a week
       })
       cookies.set('sid', session._id.toString(), {
         path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 30 * 60 // 30 minutes in seconds
+        maxAge: 7 * 24 * 60 * 60 // 7 days in seconds
       });
       
       // This can be changed to redirect to an appropriate page later
