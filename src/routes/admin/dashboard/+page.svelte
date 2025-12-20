@@ -205,6 +205,7 @@
 <!--IT IS RECOMMENDED THAT EACH "SECTION" IS CLOSED WHEN NOT BEING EDITED-->
 <!--THIS MAKES IT MORE READABLE AND EASIER TO NAVIGATE THIS HOT PILE OF-->
 
+<!--
 <div class="mx-auto flex w-full flex-col items-center gap-1 p-4"> 
 	<h1 class="mb-1 text-2xl font-semibold text-[(--fore-1)]">Admin Controls</h1>
 
@@ -255,7 +256,7 @@
              focus:ring-2 focus:ring-(--accent-1) sm:w-auto"
 			/>
 
-			<
+			
 			<button
 				type="submit"
 				class="relative flex cursor-pointer items-center justify-center gap-2 rounded-md
