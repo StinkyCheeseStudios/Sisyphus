@@ -52,7 +52,11 @@ export const actions = {
 
    // Add a new worker
    //this is going to be else where in the project, we can get rid of it later!
-  addWorker: async ({ request }) => {
+  addWorker: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     const formData = await request.formData();
     const name = formData.get('name');
     const hoursPerWeek = formData.get('hoursPerWeek');
@@ -76,7 +80,11 @@ export const actions = {
   },
   
     //Update a worker
-  updateWorker: async ({ request }) => {
+  updateWorker: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     const formData = await request.formData();
     const workerId = formData.get('workerId');
     const name = formData.get('name');
@@ -111,7 +119,11 @@ export const actions = {
   
 
    //Delete a worker
-  deleteWorker: async ({ request }) => {
+  deleteWorker: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     const formData = await request.formData();
     const workerId = formData.get('workerId');
     
@@ -134,7 +146,11 @@ export const actions = {
   },
   
    //Update schedule parameters
-  updateParams: async ({ request }) => {
+  updateParams: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     const formData = await request.formData();
     
     const updates = {
@@ -164,7 +180,11 @@ export const actions = {
   
 
    //Generate schedule (does NOT save to DB)
-  generateSchedule: async ({ request }) => {
+  generateSchedule: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     const formData = await request.formData();
     const startDate = formData.get('startDate');
     const endDate = formData.get('endDate');
@@ -215,7 +235,11 @@ export const actions = {
   
 
    //Save generated schedule to database
-  saveSchedule: async ({ request }) => {
+  saveSchedule: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     const formData = await request.formData();
     const startDate = formData.get('startDate');
     const endDate = formData.get('endDate');
@@ -254,7 +278,11 @@ export const actions = {
     }
   },
 
-  updateShift: async ({ request }) => {
+  updateShift: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     const formData = await request.formData();
     const shiftId = formData.get('shiftId');
     const newWorkerId = formData.get('workerId');

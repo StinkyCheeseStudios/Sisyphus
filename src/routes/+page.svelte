@@ -1,6 +1,8 @@
 <script>
   import CalendarWeekPicker from "./CalendarWeekPicker.svelte";
   import { ArrowBigRight, ArrowBigLeft, CalendarSearch } from "lucide-svelte";
+
+  let { data } = $props();
   
   const today = new Date();
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -158,24 +160,73 @@
     return grid;
   }
 
-  // Horror that I cooked up to display shift "boxes" in a start-/end-relative time-continuum fluster-cluck.
+  function toLocalISODate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
+  
+  // Convert DB shifts into UI-friendly structure
+  let rawShifts = $derived(data.shifts);
+
+  // Map by date for fast lookup
+  let shiftMap = $derived(() => {
+    const map = new Map();
+    for (const s of rawShifts) {
+      map.set(s.date, s);
+    }
+    return map;
+  });
+
+  // Build the 7 shifts for the selected week
+  let weekShifts = $derived(() => {
+    const { monday } = getSelectedWeekRange(selectedWeek);
+    const result = [];
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      const key = toLocalISODate(d);
+
+      const s = shiftMap().get(key);
+
+      if (!s) {
+        result.push(null);
+        continue;
+      }
+
+      // Convert shiftType + hours → actual time block
+      const start = s.shiftType === "day" ? 8 : 16;
+      const end = start + s.hours;
+
+      result.push({
+        start,
+        end,
+        text_start: `${start}:00`,
+        text_end: `${end}:00`
+      });
+    }
+
+    return result;
+  });
+
+  // Timeline scaling
   let earliest_start = $state(8);
-  let latest_end = $state(20.5);
+  let latest_end = $state(24);
   let diff = $derived(latest_end - earliest_start);
-  let shifts = $state([
-    { start: 8, end: 16, text_start: "8:00", text_end: "16:00" },
-    { start: 12, end: 20, text_start: "12:00", text_end: "20:00" },
-    { start: 10.5, end: 16.5, text_start: "10:30", text_end: "16:30" },
-    { start: 10.5, end: 16.5, text_start: "10:30", text_end: "16:30" },
-    { start: 12, end: 20, text_start: "12:00", text_end: "20:00" },
-    { start: 12, end: 20, text_start: "12:00", text_end: "20:00" },
-    { start: 8, end: 16, text_start: "8:00", text_end: "16:00" },
-  ]);
+
+  // Convert to percentages for UI
   let start_percentages = $derived(
-    shifts.map(shift => ({
-      start: Math.round((shift.start - earliest_start) / diff * 100),
-      end: Math.round((shift.end - earliest_start) / diff * 100)
-    }))
+    () => weekShifts().map(s =>
+      s
+        ? {
+            start: ((s.start - earliest_start) / diff) * 100,
+            end: ((s.end - earliest_start) / diff) * 100
+          }
+        : null
+    )
   );
 
 </script>
@@ -260,13 +311,15 @@
             </div>
           </div>
 
-          <div 
-            class="relative h-full flex justify-center items-center"
-            style="left: {start_percentages[i].start}%; width: {start_percentages[i].end - start_percentages[i].start}%"
-          >
-            <span>{shifts[i].text_start}-{shifts[i].text_end}</span>
-            <div class="absolute inset-0 rounded-xl shadow-[inset_0_0_20px_2px_var(--accent-1)] pointer-events-none"></div>
-          </div>
+          {#if weekShifts()[i]}
+            <div 
+              class="relative h-full flex justify-center items-center"
+              style="left: {start_percentages()[i].start}%; width: {start_percentages()[i].end - start_percentages()[i].start}%"
+            >
+              <span>{weekShifts()[i].text_start}-{weekShifts()[i].text_end}</span>
+              <div class="absolute inset-0 rounded-xl shadow-[inset_0_0_20px_2px_var(--accent-1)] pointer-events-none"></div>
+            </div>
+          {/if}
         </div>
       {/each}
 

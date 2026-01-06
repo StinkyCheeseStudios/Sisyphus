@@ -41,7 +41,11 @@ export async function load() {
 
 
 export const actions = {
-  createEmployee: async ({ request }) => {
+  createEmployee: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     try {
       const formData = await request.formData();
       const name = formData.get("name");
@@ -66,7 +70,11 @@ export const actions = {
     }
   },
 
-  deleteEmployee: async ({ request }) => {
+  deleteEmployee: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     try {
       const formData = await request.formData();
       const id = formData.get("id");
@@ -87,7 +95,11 @@ export const actions = {
     }
   },
 
-  resetSignupToken: async ({ request }) => {
+  resetSignupToken: async ({ request, locals }) => {
+    if (!locals.user.isAdmin) {
+      return fail(307, { error: "Unauthorized! Not on an admin user account!"});
+    }
+
     try {
       const formData = await request.formData();
       const id = formData.get("id");

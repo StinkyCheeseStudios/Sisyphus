@@ -41,7 +41,6 @@
   /* TO BE CHANGED */
   const NavigationItems = [
 		{ isDropdown: false, icon: House, text: 'Home', href: '/' },
-    { isDropdown: false, icon: UserPlus, text: 'Add User (temp)', href: '/temp/add-user' },
     { isDropdown: false, icon: LogIn, text: 'Login', href: '/login' },
 		{
 			isDropdown: true,
