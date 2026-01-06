@@ -20,16 +20,22 @@ export const handle = async ({ event, resolve }) => {
     const session = await Session.findById(sid).lean();
 
     // --- If session is not valid, delete cookie and continue to page.
-    if (!session || !session.expiresAt > new Date()) {
+    if (!session || session.expiresAt <= new Date()) {
       event.cookies.delete('sid', { path: '/' });
       return resolve(event);
     }
 
-    // --- At this point we know the session is valid so we can set user on locals
+    // --- At this point we know the session is valid so we can try to get user and set on locals
     const user = await User.findById(session.userId);
+
+    if (!user) {
+      event.cookies.delete('sid', { path: '/' });
+      return resolve(event);
+    }
 
     event.locals.user = {
       id: session.userId.toString(),
+      workerId: user.employee ? user.employee.toString() : null,
       isAdmin: user.isAdmin
     };
   }

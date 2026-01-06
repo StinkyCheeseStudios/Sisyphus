@@ -1,14 +1,33 @@
 <script>
+  import { onMount } from "svelte";
   import { Eye, EyeOff, LogIn, Info } from "lucide-svelte";
 	import { fade, fly, slide } from "svelte/transition";
 	import PinInput from "./PinInput.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import { page } from "$app/state";
 
   let { form } = $props();
 
   let showPassword = $state(false);
   let isLogIn = $state(true);
+
+  let showNotice = $state(false);
+  onMount(() => {
+    if (page.url.searchParams.get('unauthorized')) {
+      showNotice = true
+    }
+  });
 </script>
 
+{#if showNotice}
+  <Modal
+    type="error"
+    closeDelay={8000}
+    onClose={() => { showNotice = false }}
+  >
+    Unauthorized! Please log in as admin.
+  </Modal>
+{/if}
 
 <div class="w-full h-full flex flex-col justify-center items-center gap-1">
   <form 

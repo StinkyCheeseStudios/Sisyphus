@@ -6,6 +6,7 @@
   import { Sun, Moon } from 'lucide-svelte';
   import Header from './Header.svelte';
   import SidebarNav from './SidebarNav.svelte';
+  import Modal from '$lib/components/Modal.svelte';
   
 	let { children } = $props();
 
@@ -60,7 +61,6 @@
 
 <!--Main content container with flex-col to set sidebar and page content below header-->
 <div class="min-h-dvh w-full flex flex-col">
-
   <Header {toggleMenu} {isMenuOpen} />
   
   <!--Flex row container for sidebar navigation and pages (children)-->
