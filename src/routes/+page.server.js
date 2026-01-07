@@ -15,6 +15,12 @@ export async function load({ locals }) {
       'shifts.workerId': workerId
     }).lean();
 
+    if (!schedules) {
+      return {
+        shifts: []
+      }
+    }
+
     // Extract only the shifts that belong to this user
     const userShifts = schedules.flatMap(schedule =>
       schedule.shifts

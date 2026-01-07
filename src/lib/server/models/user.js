@@ -4,7 +4,6 @@ const UserSchema = new mongoose.Schema({
   employee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Worker",
-    required: true,
   },
   username: {
     type: String,

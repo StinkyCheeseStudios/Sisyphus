@@ -12,9 +12,11 @@
   let isLogIn = $state(true);
 
   let showNotice = $state(false);
-  onMount(() => {
-    if (page.url.searchParams.get('unauthorized')) {
-      showNotice = true
+  $effect(() => {
+    const unauthorized = page.url.searchParams.get('unauthorized');
+
+    if (unauthorized) {
+      showNotice = true;
     }
   });
 </script>
@@ -22,7 +24,7 @@
 {#if showNotice}
   <Modal
     type="error"
-    closeDelay={8000}
+    closeDelay={5000}
     onClose={() => { showNotice = false }}
   >
     Unauthorized! Please log in as admin.
@@ -79,6 +81,7 @@
       </label>
       <input 
         required
+        autocomplete={isLogIn ? 'on' : 'off'}
         type="text" 
         name="username"
         class="bg-main-3 border border-main-4 rounded-md w-70 focus:ring-accent"

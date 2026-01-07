@@ -7,6 +7,7 @@
   import Header from './Header.svelte';
   import SidebarNav from './SidebarNav.svelte';
   import Modal from '$lib/components/Modal.svelte';
+  import { ui } from '$lib/state/global.svelte';
   
 	let { children } = $props();
 
@@ -77,6 +78,16 @@
         transition:fade={{ duration: 250 }}
         aria-hidden="true"
         onclick={toggleMenu}
+      ></div>
+    {/if}
+
+    <!--Globally togglable background blur at root to avoid strange stacking issues deeper in the html structure-->
+    {#if ui.isBackgroundBlur}
+      <div 
+        class="absolute inset-0 bg-black/30 z-8 backdrop-blur-xs lg:hidden"
+        transition:fade={{ duration: 250 }}
+        aria-hidden="true"
+        onclick={() => { ui.onBlurClick(); ui.isBackgroundBlur = false; }}
       ></div>
     {/if}
   </div>

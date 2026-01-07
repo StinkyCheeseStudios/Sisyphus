@@ -1,10 +1,26 @@
 <script>
-	import { Copy, Check, RefreshCw, Trash2, SquarePen } from 'lucide-svelte';
-	import { scale } from 'svelte/transition';
+	import { Copy, Check, RefreshCw, Trash2, SquarePen, X } from 'lucide-svelte';
+	import { fade, scale } from 'svelte/transition';
+  import { ui } from '$lib/state/global.svelte';
 
 	let { worker } = $props();
 
+  let editing = $state(false);
+  let confirmDelete = $state(false);
   let copied = $state(false);
+
+  function openConfirmDelete() {
+    confirmDelete = true;
+    ui.onBlurClick = () => {
+      confirmDelete = false;
+    }
+    ui.isBackgroundBlur = true;
+  }
+  function closeConfirmDelete() {
+    confirmDelete = false;
+    ui.onBlurClick = null;
+    ui.isBackgroundBlur = false;
+  }
 
   function handleCopy(code) {
     navigator.clipboard.writeText(code);
@@ -18,10 +34,40 @@
 
 <div class="flex w-full flex-col gap-2 rounded-md bg-main-3 p-2">
 	<div class="flex flex-col">
-		<span class="text-lg">{worker.name}</span>
-		<span class="text-fore-3">
-			{worker.hoursPerWeek}h/week
-		</span>
+    {#if editing}
+      <form action="?/modifyEmployee" method="POST" class="flex flex-col gap-1">
+        <input 
+          type="text"
+          value={worker.name}
+          name="name"
+          id="modifyNameInput"
+          class="bg-main-4 rounded-md border-none outline-none ring-none text-sm focus:ring-accent"
+        >
+        <div class="flex gap-1">
+          <input
+            type="number"
+            value={worker.hoursPerWeek}
+            name="hours"
+            id="modifyHoursInput"
+            class="bg-main-4 rounded-md border-none outline-none ring-none text-sm focus:ring-accent grow flex-1"
+          >
+          <button
+            type="submit"
+            class="h-full aspect-square rounded-md bg-accent p-1 text-main flex justify-center items-center
+              transition-colors duration-300 hover:bg-accent/70"
+          >
+            <Check size={18} />
+          </button>
+        </div>
+
+        <input type="hidden" name="id" value={worker.id} >
+      </form>
+    {:else}
+		  <span class="text-lg">{worker.name}</span>
+		  <span class="text-fore-3">
+		  	{worker.hoursPerWeek}h/week
+		  </span>
+    {/if}
 	</div>
 
 	<div class="flex items-center justify-between">
@@ -81,22 +127,62 @@
 		</form>
 
 		<div class="flex items-center gap-1">
-			<!--DELETE WORKER BUTTON AND FORM-->
+			<!--DELETE WORKER BUTTON, CONFIRMATION POPUP, AND FORM-->
 			<form action="?/deleteEmployee" method="POST">
 				<button
+          type="button"
+          onclick={openConfirmDelete}
 					class="h-min rounded-md bg-error p-1 text-main transition-colors duration-300 hover:bg-error/70"
 				>
 					<Trash2 size={18} />
 				</button>
 				<input type="hidden" name="id" value={worker.id} />
+
+        <div 
+          class="fixed p-6 rounded-md bg-main-2 shadow-black shadow-[5px_5px_25px_5px] flex flex-col gap-5
+            {confirmDelete ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} 
+            -translate-1/2 top-1/2 left-1/2 transition-all duration-250 z-999"
+        >
+          <span>
+            Are you sure you want to delete 
+            <span class="font-semibold">
+              {worker.name}
+            </span>
+            ?
+          </span>
+
+          <div class="flex w-8/10 gap-1 mx-auto">
+            <button
+              type="submit"
+              class="rounded-md bg-error p-1 text-main flex-1 font-semibold"
+            >
+              Yes, delete!
+            </button>
+            <button
+              type="button"
+              onclick={closeConfirmDelete}
+              class="rounded-md bg-main-3 p-1 flex-1"
+            >
+              Cancel
+            </button>
+          </div>
+
+        </div>
 			</form>
 
-			<!--EDIT BUTTON // CURRENTLY DOES NOTHING-->
+			<!--EDIT BUTTON-->
 			<button
-				class="h-min rounded-md bg-accent p-1 text-main transition-colors duration-300 hover:bg-accent/70"
+				class="h-min rounded-md p-1 text-main transition-colors duration-300 hover:bg-accent/70
+          {editing ? 'bg-accent/70' : 'bg-accent'}"
+        onclick={() => { editing = !editing }}
 			>
-				<SquarePen size={18} />
+        {#if editing}
+          <X size={18} />
+        {:else}
+				  <SquarePen size={18} />
+        {/if}
 			</button>
+
 		</div>
 
 	</div>
